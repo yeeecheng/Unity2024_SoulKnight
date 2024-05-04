@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.Tilemaps;
 using UnityEngine;
+using UnityEngine.UIElements.Experimental;
+using UnityEngine.UIElements;
+using static UnityEditor.PlayerSettings;
 
 public class player_action : MonoBehaviour
 {
 
     public GameObject bulletprefab;
-
-    private float move_unit = 0.03f;
+    private float speed = 0.03f;
     public float hp = 6.0f;
     public float armor = 3.0f;
     public float mp = 200.0f;
@@ -44,33 +46,52 @@ public class player_action : MonoBehaviour
 
     void Move(){
 
-        Vector3 prev_pos = transform.position;
+        Vector3 prev_pos = transform.localPosition;
+        // W, S, A, D
+        bool[] walk_direc = {false, false, false, false};
+        
 
         if (Input.GetKey(KeyCode.W)){
-            transform.position += new Vector3(0, move_unit, 0);
-        }
-
-        if (Input.GetKey(KeyCode.A)){
-            transform.position += new Vector3(-move_unit, 0, 0);
-            if(transform.localScale.x > 0){
-                transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-            }
+            transform.localPosition += transform.up * speed;
+            walk_direc[0] = true;
         }
 
         if (Input.GetKey(KeyCode.S)){
-            transform.position += new Vector3(0, -move_unit, 0);
+            transform.localPosition += transform.up * -1 * speed;
+            walk_direc[1] = true;
+        }
+
+        if (Input.GetKey(KeyCode.A)){
+            // player always is facing the positive x-axis
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, 180, transform.eulerAngles.z);
+            transform.position += transform.right * speed;
+            walk_direc[2] = true;
         }
 
         if (Input.GetKey(KeyCode.D)){
-            transform.position += new Vector3(move_unit, 0, 0);
-            if (transform.localScale.x < 0){
-                transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-            }
+            // player always is facing the positive x-axis
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0, transform.eulerAngles.z);
+            transform.position += transform.right * speed;
+            walk_direc[3] = true;
         }
 
-        if(transform.position != prev_pos){
+        // triiger walk animation
+        if(transform.localPosition != prev_pos){
             animator.SetTrigger("WalkTrigger");
+
+            if(weapon1 != null) {
+                weapon1.GetComponent<weapon_action>().change_direction(walk_direc);
+            }
+            
+            // Fixing weapons don't change position.
+            Transform[] child_transform = transform.GetComponentsInChildren<Transform>();
+            for (int i = 0; i < child_transform.Length; i++) {
+                if (child_transform[i].tag == "weapon") {
+                    child_transform[i].localPosition = new Vector3(0, -0.045f, 0);
+                }
+            }
         }
+        
 
     }
 
@@ -94,9 +115,10 @@ public class player_action : MonoBehaviour
         // Set new weapon become the child object of player.
         new_weapon.transform.SetParent(transform);
         new_weapon.transform.localPosition = new Vector3(0, -0.045f, 0);
-        
+        //new_weapon.transform.localScale = new Vector3(Mathf.Abs(new_weapon.transform.localScale.x), new_weapon.transform.localScale.y, new_weapon.transform.localScale.z);
+
         // There are weapon1 and weapon2.
-        if(weapon1 != null && weapon2 != null) {
+        if (weapon1 != null && weapon2 != null) {
             // switch position of weapon on the ground and weapon1.
             GameObject remove_weapon = weapon1;
             remove_weapon.transform.SetParent(null);
@@ -126,14 +148,11 @@ public class player_action : MonoBehaviour
 
     // bullet genertatation
     void Fire(){
-        if (Input.GetKeyDown(KeyCode.J) || Input.GetMouseButtonDown(0)){
-            GameObject bullet = Instantiate(bulletprefab) as GameObject;
-            //GetComponentInChildren
-            //GameObject weapon = transform.GetChild(1).
-            Transform[] child = this.GetComponentsInChildren<Transform>();
-            
-            Vector3 pos = transform.position;
-            bullet.transform.position = pos;
+        if (weapon1 != null && (Input.GetKeyDown(KeyCode.J) || Input.GetMouseButtonDown(0))){
+            // position and rotation of the bullet are the same as with the weapon.
+            GameObject bullet = Instantiate(bulletprefab, weapon1.transform.position + weapon1.transform.right * 1.0f, weapon1.transform.rotation );
+
+
         }
     }
 

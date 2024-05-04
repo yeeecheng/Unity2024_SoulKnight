@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UIElements;
+
 
 public class bullet_controller : MonoBehaviour
 {
 
-    public float speed = 0.05f;
+    private float speed = 0.05f;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,10 +15,12 @@ public class bullet_controller : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        transform.position += new Vector3(speed, 0, 0); 
+    void Update() {
+        // because the weapon are always facing the positive x-axis, shooting transform.right
+        transform.localPosition += transform.right * speed;
     }
+
+   
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -31,7 +33,7 @@ public class bullet_controller : MonoBehaviour
             Destroy(gameObject);
         }
         */
-        Debug.Log(collision.gameObject.name);
+        // Debug.Log(collision.gameObject.name);
         if(collision.gameObject.name == "wall"){
             Destroy(gameObject);
         }
