@@ -2376,10 +2376,10 @@ TextureImporter:
         x: 273
         y: 70
         width: 16
-        height: 33
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 0, y: 16, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -2533,6 +2533,27 @@ TextureImporter:
       bones: []
       spriteID: ff7de0735c843d34081df1bf2e14513f
       internalID: -1445871036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bg_20
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 87
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 040ea5744554646429238766c1c3d8b5
+      internalID: 993193661
       vertices: []
       indices: 
       edges: []

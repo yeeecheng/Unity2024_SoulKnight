@@ -26,7 +26,7 @@ public class player_action : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
-        
+       
         if (IsDie()) {
             return;
         }
@@ -98,7 +98,9 @@ public class player_action : MonoBehaviour
     
     private void OnTriggerStay2D(Collider2D collision)
     {
+        
         if (collision.gameObject.tag == "weapon") {
+            //Debug.Log(collision.gameObject.name);
             if (Input.GetKeyDown(KeyCode.K)){
                 // After pick, disable collision
                 collision.enabled = false;
@@ -115,8 +117,8 @@ public class player_action : MonoBehaviour
         // Set new weapon become the child object of player.
         new_weapon.transform.SetParent(transform);
         new_weapon.transform.localPosition = new Vector3(0, -0.045f, 0);
-        //new_weapon.transform.localScale = new Vector3(Mathf.Abs(new_weapon.transform.localScale.x), new_weapon.transform.localScale.y, new_weapon.transform.localScale.z);
-
+        new_weapon.GetComponent<Renderer>().sortingOrder = 2;
+       
         // There are weapon1 and weapon2.
         if (weapon1 != null && weapon2 != null) {
             // switch position of weapon on the ground and weapon1.
@@ -127,6 +129,7 @@ public class player_action : MonoBehaviour
         }
         // There is weapon1 and not weapon2.
         else if(weapon1 != null && weapon2 == null) {
+            weapon1.GetComponent<Renderer>().sortingOrder = 0;
             // weapon1 become weapon2.
             weapon2 = weapon1;
         }
@@ -142,8 +145,10 @@ public class player_action : MonoBehaviour
             GameObject tmp = weapon1;
             weapon1 = weapon2;
             weapon2 = tmp;
+            weapon1.GetComponent<Renderer>().sortingOrder = 2;
+            weapon2.GetComponent<Renderer>().sortingOrder = 0;
         }
-        
+       
     }
 
     // bullet genertatation
@@ -175,7 +180,6 @@ public class player_action : MonoBehaviour
             Destroy(gameObject);
         }
         */
-        print(collision.gameObject.name);
-        Debug.Log(collision.gameObject.name);
+        //Debug.Log(collision.gameObject.name);
     }
 }

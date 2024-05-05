@@ -37,5 +37,9 @@ public class bullet_controller : MonoBehaviour
         if(collision.gameObject.name == "wall"){
             Destroy(gameObject);
         }
+        else if (collision.gameObject.tag == "enemy") {
+            collision.gameObject.GetComponent<monster_action>().HpReduce(1);
+            Destroy(gameObject);
+        }
     }
 }
