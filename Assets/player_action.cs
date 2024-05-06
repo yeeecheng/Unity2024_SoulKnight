@@ -9,18 +9,22 @@ using static UnityEditor.PlayerSettings;
 
 public class player_action : MonoBehaviour
 {
-
+    private float timer = 0.0f;
+    private float waiting_armor_interval = 5.0f, armor_increase_interval = 2.0f;
     public GameObject bulletprefab;
     private float speed = 0.03f;
-    public float hp = 6.0f;
-    public float armor = 3.0f;
-    public float mp = 200.0f;
-
+    public float armor_capacity = 3.0f, mp_capacity = 200.0f, hp_capacity = 6.0f;
+    private float hp, mp, armor;
+    private status_UI_controller status_UI;
     private GameObject weapon1 = null, weapon2 = null;
     private Animator animator;
     //private SpriteRenderer spriteRenderer;
     void Start(){
         animator = GetComponent<Animator>();
+        hp = hp_capacity;
+        mp = mp_capacity;
+        armor = armor_capacity;
+        status_UI = transform.GetComponent<status_UI_controller>();
         //spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -37,11 +41,16 @@ public class player_action : MonoBehaviour
         // weapone controller 
         SwitchWeapon();
 
-        /* test die
-        if (Input.GetKeyDown(KeyCode.Space)){
-            hp -= 1;
+        // armor increase timer
+        if(timer != 0.0f){
+            timer -= Time.deltaTime;
+            if(timer < 0.0f) {
+                ArmorIncrease();
+            }
         }
-        */
+
+        Status_UI_change();
+
     }
 
     void Move(){
@@ -96,8 +105,7 @@ public class player_action : MonoBehaviour
     }
 
     
-    private void OnTriggerStay2D(Collider2D collision)
-    {
+    private void OnTriggerStay2D(Collider2D collision) {
         
         if (collision.gameObject.tag == "weapon") {
             //Debug.Log(collision.gameObject.name);
@@ -156,13 +164,45 @@ public class player_action : MonoBehaviour
         if (weapon1 != null && (Input.GetKeyDown(KeyCode.J) || Input.GetMouseButtonDown(0))){
             // position and rotation of the bullet are the same as with the weapon.
             GameObject bullet = Instantiate(bulletprefab, weapon1.transform.position + weapon1.transform.right * 1.0f, weapon1.transform.rotation );
-
-
         }
     }
 
-    bool IsDie(){
+    public void HpReduce(float hp_need_reduce) {
 
+        // first reduce armor
+        if(armor > 0 && armor >= hp_need_reduce) {
+            armor -= hp_need_reduce;
+        }
+        // second reduce HP
+        else if(armor < hp_need_reduce) {
+            hp_need_reduce -= armor;
+            hp -= hp_need_reduce;
+        }
+        timer = waiting_armor_interval;
+
+        //Debug.Log("armor: " + armor + " hp: " + hp);
+    }
+
+
+    void Status_UI_change() {
+        status_UI.HP_change(hp, hp_capacity);
+        status_UI.MP_change(mp, mp_capacity);
+        status_UI.Armor_change(armor, armor_capacity);
+    }
+
+    // Haven't been attacked in a while, armor increase.
+    void ArmorIncrease() {
+        armor += 1;
+        timer = 0;
+        if(armor < armor_capacity) {
+            timer = armor_increase_interval;
+        }
+
+        //Debug.Log("armor: " + armor + " hp: " + hp);
+    }
+
+    bool IsDie(){
+   
         if (hp == 0){
             animator.SetTrigger("DieTrigger");
             return true;       

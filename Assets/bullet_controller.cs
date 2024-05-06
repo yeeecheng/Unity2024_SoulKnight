@@ -8,32 +8,27 @@ public class bullet_controller : MonoBehaviour
 {
 
     private float speed = 0.05f;
+    private Vector3 direction;
     // Start is called before the first frame update
     void Start()
     {
-        
+        SetDirection(transform.right);
     }
 
     // Update is called once per frame
     void Update() {
         // because the weapon are always facing the positive x-axis, shooting transform.right
-        transform.localPosition += transform.right * speed;
+        Debug.Log("fire direc: " + direction);
+        transform.localPosition += direction * speed;
     }
 
-   
+    public void SetDirection(Vector3 bullet_direction) {
+        direction = bullet_direction;
+        Debug.Log("set direc: " + direction);
+    }   
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        /*
-        if(collision.gameObject.tag == "Enemy") { 
-            
-        }
-        else if(collision.gameObject.tag == "wall")
-        {
-            Destroy(gameObject);
-        }
-        */
-        // Debug.Log(collision.gameObject.name);
+    public virtual void OnCollisionEnter2D(Collision2D collision) {
+       
         if(collision.gameObject.name == "wall"){
             Destroy(gameObject);
         }

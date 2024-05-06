@@ -5,37 +5,44 @@ using UnityEngine;
 
 public class monster_action : MonoBehaviour
 {
+    public bool monster_active = false;
+
+    private float timer1 = 0.0f;
+    public float timer2 = 0.0f;
     private float speed = 0.005f;
-    float timer = 0.0f;
     public float hp = 4.0f;
     private Animator animator;
     private GameObject player;
-    public bool monster_active = false;
-    void Start()
-    {
+    private float walk_interval;
+    private float idle_interval;
+    public  float attack_interval;
+
+    void Start() {
         animator = GetComponent<Animator>();
         player = GameObject.FindWithTag("player");
-        //InvokeRepeating("Move", 5f, moveInterval);
+        walk_interval = Random.Range(3, 16);
+        idle_interval = Random.Range(2, 6);
+        attack_interval = 3.0f;
     }
 
     // Update is called once per frame
     void Update() {
 
-
         if (monster_active) {
-            timer += Time.deltaTime;
-            //Debug.Log(timer);
+            timer1 += Time.deltaTime;
+            timer2 += Time.deltaTime;
+
             if (IsDie()) {
                 return;
             }
+            // For moving.
             Action();
+
+            Attack();
         }
-
-
     }
 
-    bool IsDie()
-    {
+    bool IsDie() {
 
         if (hp == 0)
         {
@@ -46,19 +53,19 @@ public class monster_action : MonoBehaviour
     }
 
     // switch action between move and idel
-    void Action()
-    {
-        if (timer < 10.0f){
+    void Action() {
+        if (timer1 <= walk_interval){
             Move();
         }
         ChangeDirection();
-        if (timer >= 15.0f){
-            timer = 0.0f;
+        if (timer1 > (walk_interval + idle_interval)){
+            timer1 = 0.0f;
         }
     }
 
-    Vector3 ChangeDirection()
-    {
+    public Vector3 ChangeDirection() {
+
+        // track the player position.
         Vector3 distance = player.transform.position - transform.position;
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0, transform.eulerAngles.z);
         if (distance.x < 0){
@@ -66,9 +73,8 @@ public class monster_action : MonoBehaviour
         }
         return distance;
     }
-    void Move()
-    {
-        animator.SetTrigger("JumpTrigger");
+    void Move() {
+        animator.SetTrigger("WalkTrigger");
         Vector3 distance = ChangeDirection();
         Vector3 direction = distance.normalized;
         //Debug.Log(Mathf.Sqrt(Mathf.Pow(distance.x, 2) + Mathf.Pow(distance.y, 2)));
@@ -77,10 +83,22 @@ public class monster_action : MonoBehaviour
         }
 
     }
-    public void HpReduce(float hp_need_reduce){
+    public void HpReduce(float hp_need_reduce) {
         this.hp -= hp_need_reduce; 
         if(hp <= 0) {
             Destroy(gameObject);
         }
     }
+
+    public virtual void Attack() {
+        
+        // for short-distance attack monster in the touch player.
+        Vector3 distance = ChangeDirection();
+        if (Mathf.Sqrt(Mathf.Pow(distance.x, 2) + Mathf.Pow(distance.y, 2)) <= 1.0f) {
+            Debug.Log("attack");
+            player.GetComponent<player_action>().HpReduce(1);
+        }
+        timer2 = 0.0f;
+    }
+    
 }

@@ -29,7 +29,7 @@ public class monster_area_controller : MonoBehaviour
             doorHead_tilemap.GetComponent<TilemapCollider2D>().enabled = false;
             doorHead_tilemap.GetComponent<TilemapRenderer>().enabled = false;
         }
-
+        
         if (player != null && !player_inside && IsPlayerInTriggerArea()) {
             doorBody_tilemap.GetComponent<TilemapCollider2D>().enabled = true;
             doorBody_tilemap.GetComponent<TilemapRenderer>().enabled = true;
@@ -38,6 +38,7 @@ public class monster_area_controller : MonoBehaviour
             monster_active = true;
             ActiveMonsters();
             player_inside = true;
+            
         }
         if(monster_active) {
             // generate monster
@@ -50,14 +51,17 @@ public class monster_area_controller : MonoBehaviour
             return;
         }
         player = collision.gameObject;
-        
+        Debug.Log(player);
     }
 
     bool IsPlayerInTriggerArea() {
         Bounds player_bounds = player.GetComponent<Collider2D>().bounds;
         Bounds trigger_bounds = GetComponent<Collider2D>().bounds;
-        
-        return trigger_bounds.Contains(player_bounds.min) && trigger_bounds.Contains(player_bounds.max);
+        Vector3 t_center = trigger_bounds.center, t_extent = trigger_bounds.extents;
+        Vector3 p_center = player_bounds.center, p_extent = player_bounds.extents;
+
+        return (t_center.x + t_extent.x >= p_center.x + p_extent.x) && (t_center.x - t_extent.x <= p_center.x - p_extent.x) &&
+            (t_center.y + t_extent.y >= p_center.y + p_extent.y) && (t_center.y - t_extent.y <= p_center.y - p_extent.y);
     }
     bool ChkEndFight() {
         return false;
