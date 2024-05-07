@@ -9,6 +9,7 @@ public class bullet_controller : MonoBehaviour
 
     private float speed = 0.05f;
     private Vector3 direction;
+    private float attack;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,13 +28,17 @@ public class bullet_controller : MonoBehaviour
         //Debug.Log("set direc: " + direction);
     }   
 
+    public void SetAttack(float attack) {
+        this.attack = attack;
+    }
+
     public virtual void OnCollisionEnter2D(Collision2D collision) {
        
         if(collision.gameObject.name == "wall"){
             Destroy(gameObject);
         }
         else if (collision.gameObject.tag == "enemy") {
-            collision.gameObject.GetComponent<monster_action>().HpReduce(1);
+            collision.gameObject.GetComponent<monster_action>().HpReduce(attack);
             Destroy(gameObject);
         }
     }

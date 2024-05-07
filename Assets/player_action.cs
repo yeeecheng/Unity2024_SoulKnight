@@ -161,9 +161,11 @@ public class player_action : MonoBehaviour
 
     // bullet genertatation
     void Fire(){
-        if (weapon1 != null && (Input.GetKeyDown(KeyCode.J) || Input.GetMouseButtonDown(0))){
+        if (weapon1 != null && mp >= weapon1.GetComponent<weapon_action>().mp  && (Input.GetKeyDown(KeyCode.J) || Input.GetMouseButtonDown(0))){
             // position and rotation of the bullet are the same as with the weapon.
             GameObject bullet = Instantiate(bulletprefab, weapon1.transform.position + weapon1.transform.right * 1.0f, weapon1.transform.rotation );
+            bullet.GetComponent<bullet_controller>().SetAttack(weapon1.GetComponent<weapon_action>().attack);
+            mp -= weapon1.GetComponent<weapon_action>().mp;
         }
     }
 
