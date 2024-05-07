@@ -51,7 +51,7 @@ public class monster_area_controller : MonoBehaviour
             return;
         }
         player = collision.gameObject;
-        Debug.Log(player);
+
     }
 
     bool IsPlayerInTriggerArea() {
@@ -63,7 +63,10 @@ public class monster_area_controller : MonoBehaviour
         return (t_center.x + t_extent.x >= p_center.x + p_extent.x) && (t_center.x - t_extent.x <= p_center.x - p_extent.x) &&
             (t_center.y + t_extent.y >= p_center.y + p_extent.y) && (t_center.y - t_extent.y <= p_center.y - p_extent.y);
     }
-    bool ChkEndFight() {
+    public bool ChkEndFight() {
+        if(transform.GetComponent<monster_generater>().round == 0) {
+            return true;
+        }
         return false;
     }
 

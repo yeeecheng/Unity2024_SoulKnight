@@ -95,7 +95,6 @@ public class monster_action : MonoBehaviour
         // for short-distance attack monster in the touch player.
         Vector3 distance = ChangeDirection();
         if (Mathf.Sqrt(Mathf.Pow(distance.x, 2) + Mathf.Pow(distance.y, 2)) <= 1.0f) {
-            Debug.Log("attack");
             player.GetComponent<player_action>().HpReduce(1);
         }
         timer2 = 0.0f;

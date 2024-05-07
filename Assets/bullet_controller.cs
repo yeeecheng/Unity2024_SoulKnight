@@ -18,13 +18,13 @@ public class bullet_controller : MonoBehaviour
     // Update is called once per frame
     void Update() {
         // because the weapon are always facing the positive x-axis, shooting transform.right
-        Debug.Log("fire direc: " + direction);
+        //Debug.Log("fire direc: " + direction);
         transform.localPosition += direction * speed;
     }
 
     public void SetDirection(Vector3 bullet_direction) {
         direction = bullet_direction;
-        Debug.Log("set direc: " + direction);
+        //Debug.Log("set direc: " + direction);
     }   
 
     public virtual void OnCollisionEnter2D(Collision2D collision) {
