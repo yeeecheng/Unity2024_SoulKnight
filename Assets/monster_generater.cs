@@ -68,6 +68,6 @@ public class monster_generater : MonoBehaviour
 
     bool ChkCollision(Vector3 position, GameObject monster){
         
-        return Physics.CheckBox(position, new Vector3(2f, 2f, 2f));
+        return Physics.CheckBox(position, new Vector3(10f, 10f, 10f));
     }
 }

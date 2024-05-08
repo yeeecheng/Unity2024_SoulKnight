@@ -7,7 +7,7 @@ using UnityEngine;
 public class bullet_controller : MonoBehaviour
 {
 
-    private float speed = 0.05f;
+    private float speed = 10.0f;
     private Vector3 direction;
     private float attack;
     // Start is called before the first frame update
@@ -20,7 +20,7 @@ public class bullet_controller : MonoBehaviour
     void Update() {
         // because the weapon are always facing the positive x-axis, shooting transform.right
         //Debug.Log("fire direc: " + direction);
-        transform.localPosition += direction * speed;
+        transform.localPosition += direction * speed * Time.deltaTime;
     }
 
     public void SetDirection(Vector3 bullet_direction) {

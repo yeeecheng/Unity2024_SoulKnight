@@ -72,7 +72,7 @@ public class weapon_action : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-     
+        Debug.Log(collision.gameObject.tag);
         if(collision.gameObject.tag == "player") {
             indicator.gameObject.SetActive(true);
             description.gameObject.SetActive(true);

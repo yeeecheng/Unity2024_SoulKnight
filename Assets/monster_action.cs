@@ -9,7 +9,7 @@ public class monster_action : MonoBehaviour
 
     private float timer1 = 0.0f;
     public float timer2 = 0.0f;
-    private float speed = 0.005f;
+    private float speed = 1.0f;
     public float hp = 4.0f;
     private Animator animator;
     private GameObject player;
@@ -79,7 +79,7 @@ public class monster_action : MonoBehaviour
         Vector3 direction = distance.normalized;
         //Debug.Log(Mathf.Sqrt(Mathf.Pow(distance.x, 2) + Mathf.Pow(distance.y, 2)));
         if (Mathf.Sqrt(Mathf.Pow(distance.x, 2) + Mathf.Pow(distance.y, 2)) > 0.85f){
-            transform.position += direction * speed;
+            transform.position += direction * speed * Time.deltaTime;
         }
 
     }

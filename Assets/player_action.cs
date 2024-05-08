@@ -12,7 +12,7 @@ public class player_action : MonoBehaviour
     private float timer = 0.0f;
     private float waiting_armor_interval = 5.0f, armor_increase_interval = 2.0f;
     public GameObject bulletprefab;
-    private float speed = 0.03f;
+    private float speed = 6.0f;
     public float armor_capacity = 3.0f, mp_capacity = 200.0f, hp_capacity = 6.0f;
     private float hp, mp, armor;
     private status_UI_controller status_UI;
@@ -61,26 +61,26 @@ public class player_action : MonoBehaviour
         
 
         if (Input.GetKey(KeyCode.W)){
-            transform.localPosition += transform.up * speed;
+            transform.localPosition += transform.up * speed * Time.deltaTime;
             walk_direc[0] = true;
         }
 
         if (Input.GetKey(KeyCode.S)){
-            transform.localPosition += transform.up * -1 * speed;
+            transform.localPosition += transform.up * -1 * speed * Time.deltaTime;
             walk_direc[1] = true;
         }
 
         if (Input.GetKey(KeyCode.A)){
             // player always is facing the positive x-axis
             transform.eulerAngles = new Vector3(transform.eulerAngles.x, 180, transform.eulerAngles.z);
-            transform.position += transform.right * speed;
+            transform.position += transform.right * speed * Time.deltaTime;
             walk_direc[2] = true;
         }
 
         if (Input.GetKey(KeyCode.D)){
             // player always is facing the positive x-axis
             transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0, transform.eulerAngles.z);
-            transform.position += transform.right * speed;
+            transform.position += transform.right * speed * Time.deltaTime;
             walk_direc[3] = true;
         }
 
