@@ -44,8 +44,7 @@ public class monster_action : MonoBehaviour
 
     bool IsDie() {
 
-        if (hp == 0)
-        {
+        if (hp == 0) {
             animator.SetTrigger("DieTrigger");
             return true;
         }
@@ -86,6 +85,7 @@ public class monster_action : MonoBehaviour
     public void HpReduce(float hp_need_reduce) {
         this.hp -= hp_need_reduce; 
         if(hp <= 0) {
+            hp = 0;
             Destroy(gameObject);
         }
     }

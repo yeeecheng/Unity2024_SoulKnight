@@ -9,6 +9,7 @@ public class weapon_action : MonoBehaviour {
     public Text description;
     public Image status;
     public float attack, mp;
+    public GameObject bulletprefab;
 
     private Text[] status_text;
     private bool is_trigger = false;

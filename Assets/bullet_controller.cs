@@ -33,13 +33,16 @@ public class bullet_controller : MonoBehaviour
     }
 
     public virtual void OnCollisionEnter2D(Collision2D collision) {
-       
+        /*
         if(collision.gameObject.name == "wall"){
             Destroy(gameObject);
         }
-        else if (collision.gameObject.tag == "enemy") {
+        else
+        */
+        if (collision.gameObject.tag == "enemy") {
             collision.gameObject.GetComponent<monster_action>().HpReduce(attack);
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
+        Destroy(gameObject);
     }
 }

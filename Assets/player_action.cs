@@ -11,21 +11,25 @@ public class player_action : MonoBehaviour
 {
     private float timer = 0.0f;
     private float waiting_armor_interval = 5.0f, armor_increase_interval = 2.0f;
-    public GameObject bulletprefab;
+    
     private float speed = 6.0f;
     public float armor_capacity = 3.0f, mp_capacity = 200.0f, hp_capacity = 6.0f;
     private float hp, mp, armor;
     private status_UI_controller status_UI;
     private GameObject weapon1 = null, weapon2 = null;
     private Animator animator;
-    //private SpriteRenderer spriteRenderer;
+    private AudioSource fire_audio, switch_audio;
+
     void Start(){
         animator = GetComponent<Animator>();
         hp = hp_capacity;
         mp = mp_capacity;
         armor = armor_capacity;
         status_UI = transform.GetComponent<status_UI_controller>();
-        //spriteRenderer = GetComponent<SpriteRenderer>();
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        fire_audio = audioSources[0];
+        switch_audio = audioSources[1];
+
     }
 
     // Update is called once per frame
@@ -101,20 +105,40 @@ public class player_action : MonoBehaviour
             }
         }
         
-
     }
 
     
     private void OnTriggerStay2D(Collider2D collision) {
         
         if (collision.gameObject.tag == "weapon") {
-            //Debug.Log(collision.gameObject.name);
+            Debug.Log("///");
             if (Input.GetKeyDown(KeyCode.K)){
                 // After pick, disable collision
                 collision.enabled = false;
                 GetWeapon(collision.gameObject);
             }
         }
+        else if (collision.gameObject.tag == "mp") {
+            
+            GetMp(collision);
+        }
+    }
+
+    private void GetMp(Collider2D mp) {
+
+        Destroy(mp.gameObject);
+
+        if (this.mp == mp_capacity) {
+            return;
+        }
+
+        if(this.mp + 4  <= mp_capacity) {
+            this.mp += 4;
+        }
+        else {
+            this.mp = mp_capacity;
+        }
+
     }
 
 
@@ -150,6 +174,7 @@ public class player_action : MonoBehaviour
     void SwitchWeapon(){
         
         if (Input.GetKeyDown(KeyCode.L) && weapon1 != null && weapon2 != null) {
+            switch_audio.Play();
             GameObject tmp = weapon1;
             weapon1 = weapon2;
             weapon2 = tmp;
@@ -162,8 +187,9 @@ public class player_action : MonoBehaviour
     // bullet genertatation
     void Fire(){
         if (weapon1 != null && mp >= weapon1.GetComponent<weapon_action>().mp  && (Input.GetKeyDown(KeyCode.J) || Input.GetMouseButtonDown(0))){
+            fire_audio.Play();
             // position and rotation of the bullet are the same as with the weapon.
-            GameObject bullet = Instantiate(bulletprefab, weapon1.transform.position + weapon1.transform.right * 1.0f, weapon1.transform.rotation );
+            GameObject bullet = Instantiate(weapon1.GetComponent<weapon_action>().bulletprefab, weapon1.transform.position + weapon1.transform.right * 1.0f, weapon1.transform.rotation );
             bullet.GetComponent<bullet_controller>().SetAttack(weapon1.GetComponent<weapon_action>().attack);
             mp -= weapon1.GetComponent<weapon_action>().mp;
         }
@@ -177,7 +203,11 @@ public class player_action : MonoBehaviour
         }
         // second reduce HP
         else if(armor < hp_need_reduce) {
+            
             hp_need_reduce -= armor;
+            // armor should be 0
+            armor = 0;
+            // remaining damage 
             hp -= hp_need_reduce;
         }
         timer = waiting_armor_interval;

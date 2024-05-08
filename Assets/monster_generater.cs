@@ -12,7 +12,7 @@ public class monster_generater : MonoBehaviour
     public int round = 1;
     
     void Start() {
-        
+        Debug.Log(round);
         // first round already generate.
         round += monster_num_genetate.Length;
         // must in the Assets/Resources;
@@ -68,6 +68,6 @@ public class monster_generater : MonoBehaviour
 
     bool ChkCollision(Vector3 position, GameObject monster){
         
-        return Physics.CheckBox(position, new Vector3(10f, 10f, 10f));
+        return Physics.CheckBox(position, new Vector3(50f, 50f, 50f));
     }
 }

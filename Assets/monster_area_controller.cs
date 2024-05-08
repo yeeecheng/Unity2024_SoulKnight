@@ -11,26 +11,32 @@ public class monster_area_controller : MonoBehaviour
     private bool monster_active = false;
     private GameObject player = null;
     private bool player_inside = false;
+    private bool over = false;
+    public GameObject box_monster_area;
 
     void Start()
     {
-        doorBody_tilemap = GameObject.Find("door_body").GetComponent<Tilemap>();
-        doorHead_tilemap = GameObject.Find("door_head").GetComponent <Tilemap>();
-        
+        doorBody_tilemap= GameObject.Find("door_body").GetComponent<Tilemap>();
+        doorHead_tilemap= GameObject.Find("door_head").GetComponent <Tilemap>();
+        box_monster_area.SetActive(false);
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (ChkEndFight()) {
+        if (ChkEndFight() && !over) {
+            
+            over = true;
             doorBody_tilemap.GetComponent<TilemapCollider2D>().enabled = false;
             doorBody_tilemap.GetComponent<TilemapRenderer>().enabled = false;
             doorHead_tilemap.GetComponent<TilemapCollider2D>().enabled = false;
             doorHead_tilemap.GetComponent<TilemapRenderer>().enabled = false;
+            box_monster_area.SetActive(true);
         }
-        
-        if (player != null && !player_inside && IsPlayerInTriggerArea()) {
+       
+        if (player != null && IsPlayerInTriggerArea() && !player_inside) {
+            
             doorBody_tilemap.GetComponent<TilemapCollider2D>().enabled = true;
             doorBody_tilemap.GetComponent<TilemapRenderer>().enabled = true;
             doorHead_tilemap.GetComponent<TilemapCollider2D>().enabled = true;
@@ -59,7 +65,7 @@ public class monster_area_controller : MonoBehaviour
         Bounds trigger_bounds = GetComponent<Collider2D>().bounds;
         Vector3 t_center = trigger_bounds.center, t_extent = trigger_bounds.extents;
         Vector3 p_center = player_bounds.center, p_extent = player_bounds.extents;
-
+      
         return (t_center.x + t_extent.x >= p_center.x + p_extent.x) && (t_center.x - t_extent.x <= p_center.x - p_extent.x) &&
             (t_center.y + t_extent.y >= p_center.y + p_extent.y) && (t_center.y - t_extent.y <= p_center.y - p_extent.y);
     }
