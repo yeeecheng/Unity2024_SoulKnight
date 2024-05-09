@@ -9,16 +9,18 @@ using static UnityEditor.PlayerSettings;
 
 public class player_action : MonoBehaviour
 {
+    public float armor_capacity = 3.0f, mp_capacity = 200.0f, hp_capacity = 6.0f;
+    public Canvas gameover_UI, bg_UI;
+    
     private float timer = 0.0f;
     private float waiting_armor_interval = 5.0f, armor_increase_interval = 2.0f;
-    
     private float speed = 6.0f;
-    public float armor_capacity = 3.0f, mp_capacity = 200.0f, hp_capacity = 6.0f;
     private float hp, mp, armor;
     private status_UI_controller status_UI;
     private GameObject weapon1 = null, weapon2 = null;
     private Animator animator;
     private AudioSource fire_audio, switch_audio;
+    private bool is_die = false;
 
     void Start(){
         animator = GetComponent<Animator>();
@@ -34,8 +36,8 @@ public class player_action : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
-       
-        if (IsDie()) {
+        //Debug.Log(Time.time);
+        if (!is_die && IsDie() ) {
             return;
         }
         Move();
@@ -111,7 +113,7 @@ public class player_action : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision) {
         
         if (collision.gameObject.tag == "weapon") {
-            Debug.Log("///");
+            
             if (Input.GetKeyDown(KeyCode.K)){
                 // After pick, disable collision
                 collision.enabled = false;
@@ -189,8 +191,9 @@ public class player_action : MonoBehaviour
         if (weapon1 != null && mp >= weapon1.GetComponent<weapon_action>().mp  && (Input.GetKeyDown(KeyCode.J) || Input.GetMouseButtonDown(0))){
             fire_audio.Play();
             // position and rotation of the bullet are the same as with the weapon.
-            GameObject bullet = Instantiate(weapon1.GetComponent<weapon_action>().bulletprefab, weapon1.transform.position + weapon1.transform.right * 1.0f, weapon1.transform.rotation );
-            bullet.GetComponent<bullet_controller>().SetAttack(weapon1.GetComponent<weapon_action>().attack);
+            bullet_controller bullet = Instantiate(weapon1.GetComponent<weapon_action>().bulletprefab, weapon1.transform.position + weapon1.transform.right * 1.0f, weapon1.transform.rotation).GetComponent<bullet_controller>();
+            bullet.SetAttack(weapon1.GetComponent<weapon_action>().attack);
+            //bullet.SetDirection(transform.right);
             mp -= weapon1.GetComponent<weapon_action>().mp;
         }
     }
@@ -207,8 +210,13 @@ public class player_action : MonoBehaviour
             hp_need_reduce -= armor;
             // armor should be 0
             armor = 0;
-            // remaining damage 
-            hp -= hp_need_reduce;
+            // remaining damage
+            if(hp < hp_need_reduce) {
+                hp = 0;
+            }
+            else {
+                hp -= hp_need_reduce;
+            }
         }
         timer = waiting_armor_interval;
 
@@ -237,10 +245,16 @@ public class player_action : MonoBehaviour
    
         if (hp == 0){
             animator.SetTrigger("DieTrigger");
+            gameover_UI.gameObject.SetActive(true);
+            gameover_UI.GetComponent<gameover_UI>().SetClockText(Time.time.ToString());
+            gameover_UI.GetComponent<gameover_UI>().SetKillText(11.ToString());
+            is_die = true;
             return true;       
         }
         return false;
     }
+
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         /*

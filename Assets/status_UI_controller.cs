@@ -5,20 +5,13 @@ using UnityEngine.UI;
 
 public class status_UI_controller : MonoBehaviour
 {
-    private Image hp_bar, armor_bar, mp_bar;
-    private Text hp_text, armor_text, mp_text;
+    public Image hp_bar, armor_bar, mp_bar;
+    public Text hp_text, armor_text, mp_text;
     
-    /// <summary>
-    /// Accroding to the changing of hp, mp and armor, update the UI. 
-    /// </summary>
-    void Start() {
-        hp_bar = GameObject.Find("HP").GetComponent<Image>();
-        armor_bar = GameObject.Find("Armor").GetComponent<Image>();
-        mp_bar = GameObject.Find("MP").GetComponent<Image>();
-        hp_text = GameObject.Find("hp_text").GetComponent<Text>();
-        armor_text = GameObject.Find("armor_text").GetComponent<Text>();
-        mp_text = GameObject.Find("mp_text").GetComponent<Text>();
 
+    /// Accroding to the changing of hp, mp and armor, update the UI. 
+
+    void Start() {
     }
 
     public void HP_change(float cur_hp, float hp_capcity) {

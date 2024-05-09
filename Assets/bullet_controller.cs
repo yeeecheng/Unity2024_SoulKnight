@@ -8,28 +8,33 @@ public class bullet_controller : MonoBehaviour
 {
 
     private float speed = 10.0f;
-    private Vector3 direction;
+    private Vector3 direction = new Vector3();
     private float attack;
     // Start is called before the first frame update
-    void Start()
-    {
-        SetDirection(transform.right);
+   
+    void Start() {
+        
+        if(direction == new Vector3(0, 0, 0)){
+            SetDirection(transform.right);
+        }
     }
 
     // Update is called once per frame
     void Update() {
         // because the weapon are always facing the positive x-axis, shooting transform.right
-        //Debug.Log("fire direc: " + direction);
         transform.localPosition += direction * speed * Time.deltaTime;
     }
 
     public void SetDirection(Vector3 bullet_direction) {
         direction = bullet_direction;
-        //Debug.Log("set direc: " + direction);
     }   
 
     public void SetAttack(float attack) {
         this.attack = attack;
+    }
+
+    public void SetSpeed(float speed) {
+        this.speed = speed;
     }
 
     public virtual void OnCollisionEnter2D(Collision2D collision) {

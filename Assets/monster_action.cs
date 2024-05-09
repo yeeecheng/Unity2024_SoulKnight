@@ -7,15 +7,14 @@ public class monster_action : MonoBehaviour
 {
     public bool monster_active = false;
 
-    private float timer1 = 0.0f;
-    public float timer2 = 0.0f;
+    public float timer1 = 0.0f, timer2 = 0.0f;
     private float speed = 1.0f;
     public float hp = 4.0f;
-    private Animator animator;
+    protected Animator animator;
     private GameObject player;
     private float walk_interval;
     private float idle_interval;
-    public  float attack_interval;
+    protected float attack_interval;
 
     void Start() {
         animator = GetComponent<Animator>();
@@ -42,7 +41,7 @@ public class monster_action : MonoBehaviour
         }
     }
 
-    bool IsDie() {
+    public virtual bool IsDie() {
 
         if (hp == 0) {
             animator.SetTrigger("DieTrigger");
@@ -52,7 +51,8 @@ public class monster_action : MonoBehaviour
     }
 
     // switch action between move and idel
-    void Action() {
+    public void Action() {
+       
         if (timer1 <= walk_interval){
             Move();
         }
@@ -72,7 +72,7 @@ public class monster_action : MonoBehaviour
         }
         return distance;
     }
-    void Move() {
+    public void Move() {
         animator.SetTrigger("WalkTrigger");
         Vector3 distance = ChangeDirection();
         Vector3 direction = distance.normalized;
@@ -82,8 +82,9 @@ public class monster_action : MonoBehaviour
         }
 
     }
-    public void HpReduce(float hp_need_reduce) {
-        this.hp -= hp_need_reduce; 
+    public virtual void HpReduce(float hp_need_reduce) {
+        this.hp -= hp_need_reduce;
+       
         if(hp <= 0) {
             hp = 0;
             Destroy(gameObject);
