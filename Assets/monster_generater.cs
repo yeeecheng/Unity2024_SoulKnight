@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.iOS;
 using UnityEngine;
 
 public class monster_generater : MonoBehaviour

@@ -1,11 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Tilemaps;
 using UnityEngine;
-using UnityEngine.UIElements.Experimental;
-using UnityEngine.UIElements;
-using static UnityEditor.PlayerSettings;
 
 public class player_action : MonoBehaviour
 {
